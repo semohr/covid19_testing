@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" id="top">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>COVIF-19 Tracking &amp; Tracing</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet"> 
+
+  <!-- Master CSS -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <header id="header">
+    <nav class="navbar navbar-expand navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <img src="assets/img/logo.png" alt="logo" width="50" height="50">
+      </a>
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="/">COVID-19 Tracing &amp; Testing</a></li>
+        <li class="nav-item disabled"><a class="nav-link" href="/about.html">About</a></li>
+        <li class="nav-item disabled"><a class="nav-link" href="/about.html">FAQ</a></li>
+        <li class="nav-item disabled"><a class="nav-link" href="/about.html">More</a></li>
+      </ul>
+     </nav>
+    </div>
+  </header>
+
+  <main class="main container-fluid absolute" role="main">
+    <div class="row-main no-gutters row">
+      <div class="row-form-main row">
+        <div class="col-wrapper-trackntrace animate-flex-width col-lg-4 col-xl-4">
+          <div class="card">
+            <div class="card-header">
+              Vars <div id="advanced-checkbox" align="right">Advanced mode<input id="advanced_mode" type="checkbox"></div>
+            </div>
+            <div class="card-body interactive_form">
+              <div class="row form-header">
+                <label class="form-label col">Population size</label>
+                <label class="form-label col"><math>M</math></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="10000" max="100000000" step="1" value="80000000" id="M">
+                <input type="number" class="form-number" min="10000" max="100000000" step="1" value="80000000"  id="M">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Basic reproduction number</label>
+                <label class="form-label col"><math>R<sub>0</sub></math></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="2.2" max="4.4" step="0.01" value="3.28" id="R_0">
+                <input type="number" class="form-number" min="2.2" max="4.4" step="0.01" value="3.28" id="R_0">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Reproduction number (hidden)</label>
+                <label class="form-label col"><math>R<sub>t</sub><sup>H</sup></math></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0" max="5" step="0.01" value="1.8" id="R_t_H">
+                <input type="number" class="form-number" min="0" max="5" step="0.01" value="1.8" id="R_t_H">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Case discharge rate</label>
+                <label class="form-label col"><math> &Gamma;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
+                <input type="number" class="form-number" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Asymptomatic ratio</label>
+                <label class="form-label col"><math> &xi;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
+                <input type="number" class="form-number" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Fraction skipping testing</label>
+                <label class="form-label col"><math> &phi;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.1" max="0.4" step="0.001" value="0.2" id="phi">
+                <input type="number" class="form-number" min="0.1" max="0.4" step="0.001" value="0.2" id="phi">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Isolation factor (traced)</label>
+                <label class="form-label col"><math> &nu;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.0" max="0.4" step="0.001" value="0.1" id="nu">
+                <input type="number" class="form-number" min="0.0" max="0.4" step="0.001" value="0.1" id="nu">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Random testing rate</label>
+                <label class="form-label col"><math> &lambda;<sub>r</sub></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.0" max="0.02" step="0.0001" value="0.0" id="lambda_r">
+                <input type="number" class="form-number" min="0.0" max="0.02" step="0.0001" value="0.0" id="lambda_r">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Symptom-driven testing rate</label>
+                <label class="form-label col"><math> &lambda;<sub>s</sub></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.0" max="1.0" step="0.01" value="0.1" id="lambda_s">
+                <input type="number" class="form-number" min="0.0" max="1.0" step="0.01" value="0.1" id="lambda_s">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Tracing efficiency</label>
+                <label class="form-label col"><math> &eta;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.0" max="2.0" step="0.01" value="0.66" id="eta">
+                <input type="number" class="form-number" min="0.0" max="2.0" step="0.01" value="0.66" id="eta">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Tracing capacity (only positive contacts counted)</label>
+                <label class="form-label col"><math> n<sub>max</sub></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="100" max="3000" step="1" value="300" id="n_max">
+                <input type="number" class="form-number" min="100" max="3000" step="1" value="300" id="n_max">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Missed contacts (traced)</label>
+                <label class="form-label col"><math> &epsilon;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0.0" max="2.0" step="0.01" value="0.1" id="epsilon">
+                <input type="number" class="form-number" min="0.0" max="2.0" step="0.01" value="0.1" id="epsilon">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Influx rate (hidden)</label>
+                <label class="form-label col"><math> &Phi;</label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0" max="1000" step="1" value="15" id="Phi">
+                <input type="number" class="form-number" min="0" max="1000" step="1" value="15" id="Phi">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">Maximal test capacity per capita</label>
+                <label class="form-label col"><math> &lambda;<sub>r,max</sub></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0" max="0.01" step="0.0001" value="0.002" id="lambda_r_max">
+                <input type="number" class="form-number" min="0" max="0.01" step="0.0001" value="0.002" id="lambda_r_max">
+              </div>
+
+              <div class="row form-header">
+                <label class="form-label col">xi_ap</label>
+                <label class="form-label col"><math> &xi;<sub>ap</sub></label>
+              </div>
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="0" max="1" step="0.001" value="0.32" id="xi_ap">
+                <input type="number" class="form-number" min="0" max="1" step="0.001" value="0.32" id="xi_ap">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Highchart -->
+        <div class="col-wrapper-trackntrace animate-flex-width col-lg-8 col-xl-8">
+          <div class="card">
+            <div class="card-header">
+              Header image
+            </div>
+            <div class="card-body">
+              <div id="main_chart" style="width:100%; height:400px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    
+
+  </footer>
+
+
+
+  <!-- Bootstrap JS -->
+  <script src="assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Highcharts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+
+
+  <!-- Own JS -->
+  <script type="text/javascript" src="assets/js/model.js"></script>
+  <script type="text/javascript" src="assets/js/main.js"></script>
+</body>
+</html>

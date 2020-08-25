@@ -1,0 +1,111 @@
+/*
+* @Author: Sebastian B. Mohr
+* @Date:   2020-08-21 14:26:50
+* @Last Modified by:   sebastian
+* @Last Modified time: 2020-08-25 09:25:32
+*/
+
+
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+
+body {
+	font-family: "Source Serif Pro", sans-serif;
+}
+
+
+a:hover {
+  color: #094277;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Source Serif Pro", sans-serif;
+}
+
+.center{
+	text-align: center;
+}
+
+.disabled {
+    pointer-events: none;
+}
+
+.no-gutters{
+	margin:0px;
+}
+
+/*--------------------------------------------------------------
+# Navigator
+--------------------------------------------------------------*/
+.nav-link {
+	font-size: 1em;
+	color: #094277;
+}
+
+.active .nav-link{
+	color: #094277 !important;
+}
+
+a.navbar-brand{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+/*--------------------------------------------------------------
+# Forms
+--------------------------------------------------------------*/
+
+
+.interactive_form .form-range{
+	width: 79%;
+	padding-right: 2%;
+}
+
+.interactive_form .form-number{
+	width: 20%;
+}
+
+.interactive_form .form-label{
+	width: 100%;
+}
+.interactive-form .form-inputs{
+	justify-content: center;
+}
+
+.row-form-main{
+	margin:0;
+	padding: 0;
+}
+/*--------------------------------------------------------------
+# Card
+--------------------------------------------------------------*/
+
+.card-header{
+	justify-content: space-between
+}
+
+#advanced-checkbox{
+	position: absolute;
+	display: inline;
+	right: 0;
+	color: #446493;
+}
+
+#advanced-checkbox input{
+  width: 13px;
+  height: 13px;
+  transform: scale(1.2);
+  padding: 0;
+  margin:0;
+  margin-right: 8px;
+  margin-left: 6px; 
+  vertical-align: middle;
+  position: relative;
+}
+
+.card{
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
