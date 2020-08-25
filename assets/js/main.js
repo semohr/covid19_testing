@@ -7,8 +7,11 @@ Module['onRuntimeInitialized'] = function() {
 	wasm_init = true;
 }
 
+//GLOBAL model object i.e. a instance of our cpp model class.
 var model;
 
+/*Run load function on load of website sometime wasm loads in strange behaviour or
+is not fully loaded on the 'load' event so we make an additional check for that*/
 window.addEventListener("load", setup);
 function setup(){
 	if (!wasm_init){
@@ -26,6 +29,11 @@ function setup(){
 }
 
 function complete_model_run(){
+	/*Function which performs a complete model run
+	it gets and syncs all inputs with the wasm model, than 
+	runs the model, gets new data from wasm and updates the graph
+	*/
+
 	//Update params
 	update_model_params();
 	//Run model
@@ -64,7 +72,7 @@ function get_model_data(){
 	let data = model.data;
 
 	//Convert to nice javscript arrays
-	let time_array = [];
+	let time_array = data.time();
 	modelData["T"] = data.T();
 	modelData["H"] = data.H();
 	modelData["H_S"] = data.H_S();
@@ -119,7 +127,7 @@ function create_initial_chart(){
 			data: modelData["H"],
 		},
 		{
-			name: "Hidden Suceptible",
+			name: "Hidden symptomatic",
 			data: modelData["H_S"],
 		}]
 

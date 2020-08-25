@@ -14,7 +14,7 @@
 using namespace std;
 using namespace emscripten;
 
-//data
+//Data used for communication with javscript
 struct mydata_struct{
 	vector<array<double,3>> SV;
 	vector<double> time;
@@ -22,20 +22,24 @@ struct mydata_struct{
 	vector<double> H;
 	vector<double> H_S;
 
-	//Return emscripten val for easy memory view
 	val getT(){
-		double* a = &T[0];
+		//Return emscripten::val for easy memory view of an array
+		double* a = &T[0]; //since C++0x vectors elemnts are contiguous in memory
 		return val(typed_memory_view(T.size(),a));
 	}
-	//Return emscripten val for easy memory view
 	val getH(){
-		double* a = &H[0];
+		double* a = &H[0]; 
 		return val(typed_memory_view(H.size(),a));
 	}
-	//Return emscripten val for easy memory view
+
 	val getH_S(){
 		double* a = &H_S[0];
 		return val(typed_memory_view(H_S.size(),a));
+	}
+
+	val gettime(){
+		double* a= &time[0];
+		return val(typed_memory_view(time.size(),a));
 	}
 };
 
@@ -262,7 +266,6 @@ array<double,3> Model::runge_kutta4(double dt, double t, array<double,3> SV){
 // Communication with javascript
 // ---------------------------------------------------------------------------- //
 
-
 void Model::run(double dt, double t_max) {
 
 	data.T.clear();
@@ -304,27 +307,15 @@ void Model::get_data(double* in_data){
 }
 
 
-double a[10];
-
-
-val getBytes() {
-	for (int i = 0; i < 10; ++i)
-	{
-		a[i]=2.3;
-	}
-	return val(typed_memory_view(10,a));
-}
-
 EMSCRIPTEN_BINDINGS(external_constructors) {
 
-	emscripten::function("getBytes", &getBytes);
   // register bindings for double vector
-  register_vector<double>("vector<double>");
+  register_vector<double>("vector<double>"); //This is not need but i find it quite interessting
 
 	// register bingins for my data struct
 	class_<mydata_struct>("mydata_struct")
 		.constructor<>()
-		.property("time",&mydata_struct::time)
+		.function("time",&mydata_struct::gettime)
 		.function("T",&mydata_struct::getT)
 		.function("H",&mydata_struct::getH)
 		.function("H_S",&mydata_struct::getH_S)
@@ -334,6 +325,7 @@ EMSCRIPTEN_BINDINGS(external_constructors) {
     .constructor<>()
     .function("run", &Model::run)
     .function("get_data",&Model::get_data, allow_raw_pointers())
+
     //Alot of parameters here
 		.property("M",&Model::getM,&Model::setM)
 		.property("R_0",&Model::getR_0,&Model::setR_0)
@@ -357,12 +349,12 @@ EMSCRIPTEN_BINDINGS(external_constructors) {
 }
 
 /*
+Python snippet for generating the property strings:
+
 vars = ["M","R_0","R_t_H","gamma","xi","phi","nu","lambda_r","lambda_s","eta","n_max","epsilon","Phi","lambda_r_max","xi_ap"]
 for var in vars:
   print(f'.property("{var}",&Model::get{var},&Model::set{var})')
 */
-
-
 
 
 int main() {
