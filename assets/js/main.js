@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------- //
 var wasm_init = false;
 Module['onRuntimeInitialized'] = function() {
-	console.log("model wasm loaded");
-	wasm_init = true;
+  console.log("model wasm loaded");
+  wasm_init = true;
 }
 
 //GLOBAL model object i.e. a instance of our cpp model class.
@@ -14,68 +14,67 @@ var model;
 is not fully loaded on the 'load' event so we make an additional check for that*/
 window.addEventListener("load", setup);
 function setup(){
-	if (!wasm_init){
-		setTimeout(setup, 10);
-		return;
-	}
-	//Create global model instance
-	model = new Module.Model();
+  if (!wasm_init){
+    setTimeout(setup, 10);
+    return;
+  }
+  //Create global model instance
+  model = new Module.Model();
 
-	//Run the model once
-	complete_model_run();
+  //Run the model once
+  complete_model_run();
 
-	// Add events to buttons
-	add_update_params_events();
+  // Add events to buttons
+  add_update_params_events();
 }
 
 function complete_model_run(){
-	/*Function which performs a complete model run
-	it gets and syncs all inputs with the wasm model, than 
-	runs the model, gets new data from wasm and updates the graph
-	*/
+  /*Function which performs a complete model run
+  it gets and syncs all inputs with the wasm model, than 
+  runs the model, gets new data from wasm and updates the graph
+  */
 
-	//Update params
-	update_model_params();
-	//Run model
-	model.run(1,50);
-	//Get new data
-	get_model_data();
-	//Update graph
-	update_chart();
+  //Update params
+  update_model_params();
+  //Run model
+  model.run(1,50,params["T_A_0"],params["T_S_0"],params["H_A_0"],params["H_S_0"]);
+  //Get new data
+  get_model_data();
+  //Update graph
+  update_chart();
 }
 
 function update_model_params(){
-	//Syncs the javascript params to the wasm model params
-	model.M 					= params["M"];
-	model.R_0 				= params["R_0"];
-	model.R_t_H				= params["R_t_H"];
-	model.gamma				= params["gamma"];
-	model.xi					= params["xi"];
-	model.phi		  		= params["phi"];
-	model.nu					= params["nu"];
-	model.lambda_r		= params["lambda_r"];
-	model.lambda_s		= params["lambda_s"];
-	model.eta					= params["eta"];
-	model.n_max				= params["n_max"];
-	model.epsilon			= params["epsilon"];
-	model.Phi					= params["Phi"];
-	model.lambda_r_max= params["lambda_r_max"];
-	model.xi_ap				= params["xi_ap"];
-	return;
+  //Syncs the javascript params to the wasm model params
+  model.M           = params["M"];
+  model.R_0         = params["R_0"];
+  model.R_t_H       = params["R_t_H"];
+  model.gamma       = params["gamma"];
+  model.xi          = params["xi"];
+  model.phi         = params["phi"];
+  model.nu          = params["nu"];
+  model.lambda_r    = params["lambda_r"];
+  model.lambda_s    = params["lambda_s"];
+  model.eta         = params["eta"];
+  model.n_max       = params["n_max"];
+  model.epsilon     = params["epsilon"];
+  model.Phi         = params["Phi"];
+  model.lambda_r_max= params["lambda_r_max"];
+  return;
 }
 
 var modelData = {};
 function get_model_data(){
-	//Updates global modelData object
+  //Updates global modelData object
 
-	// Get data from C model run
-	let data = model.data;
+  // Get data from C model run
+  let data = model.data;
 
-	//Convert to nice javscript arrays
-	let time_array = data.time();
-	modelData["T"] = data.T();
-	modelData["H"] = data.H();
-	modelData["H_S"] = data.H_S();
+  //Convert to nice javscript arrays
+  let time_array = data.time();
+  modelData["T"] = data.T();
+  modelData["H"] = data.H();
+  modelData["H_S"] = data.H_S();
 }
 
 
@@ -83,70 +82,112 @@ function get_model_data(){
 // Highcharts
 // ---------------------------------------------------------------------------- //
 window.charts = {}
-
+var toggle = true;
 function create_initial_chart(){
-	var myChart = Highcharts.chart('main_chart', {
-		title: {
-			text: 'Compartments',
-			renderTo: 'main_chart'
-		},
+  var myChart = Highcharts.chart('main_chart', {
+    title: {
+      text: 'Compartments',
+      renderTo: 'main_chart'
+    },
+    subtitle:{
+      text: 'Total people in the corresponding traced or hidden compartments.'
+    },
 
-		subtitle: {
-			text: 'Plain'
-		},
+    xAxis: {
+      title: {
+        text: 'Time in days' 
+      },
+      labels: {
+        format: '{value}'
+      },
+    },
 
-		xAxis: {
-			title: {
-				text: 'Time in days' 
-			},
-			labels: {
-      	format: '{value}'
-    	},
-		},
+    //Hover 
+    tooltip:{
+      formatter: function(){
+        return "There are "+this.y.toFixed(0)+" ppl in the "+this.series.name+" pool </b> at "+this.x.toFixed(0)+" days after start.";
+      }
+    },
 
-		tooltip:{
-			formatter: function(){
-				return "There are "+this.y.toFixed(0)+" ppl in the "+this.series.name+" pool </b> at "+this.x.toFixed(0)+" days after start.";
-			}
-		},
-
-		plotOptions:{
+    //Disable markers
+    plotOptions:{
         series: {
           marker: {
               enabled: false
+          },
+          lineWidth: 4
+        }
+    },
+
+    //Remove highchart credit ;)
+    credits: {
+        enabled: false
+    },
+
+    //Export button for png svg and other
+    exporting: {
+        enabled: true,
+        buttons: {
+          costomButtn: {
+            text: 'Toggle logscale',
+            onclick: function (e) {
+              if (toggle) {
+                options = {
+                	type :'logarithmic',
+                	min: 0.1,
+                }
+              }
+              else{
+              	options = {
+              		type :'linear',
+              		min: 0.0,
+              	}
+                
+              }
+
+              this.update({
+                yAxis: options,
+              });
+              toggle = !toggle
+            },
           }
         }
-		},
+    },
 
-		series: [{
-			name: "Traced",
-			data: modelData["T"],
-		},
-		{
-			name: "Hidden",
-			data: modelData["H"],
-		},
-		{
-			name: "Hidden symptomatic",
-			data: modelData["H_S"],
-		}]
+    //Data
+    series: [{
+      name: "Traced",
+      data: [modelData["T"],modelData["time"]],
+      color: '#00446f',
+    },
+    {
+      name: "Hidden",
+      data: [modelData["H"],modelData["time"]],
+      dashStyle: 'DashDot',
+      color: '#7bacca'
+    },
+    {
+      name: "Hidden symptomatic",
+      data: [modelData["H_S"],modelData["time"]],
+      dashStyle: 'Dot',
+      color: '#006fb9'
+    }]
 
-	})
-	window.charts[myChart.renderTo.id] = myChart;
-	return;
+  })
+  window.charts[myChart.renderTo.id] = myChart;
+  return;
 }
 
 function update_chart(){
-	if (typeof window.charts["main_chart"] == 'undefined') {
-	  create_initial_chart();
-	  return;
-	}
-	var first_graph = window.charts["main_chart"];
-	first_graph.series[0].setData(modelData["T"],false);
-	first_graph.series[1].setData(modelData["H"],false);
-	first_graph.series[2].setData(modelData["H_S"],false);
-	first_graph.redraw();
-	console.log("hi")
+  if (typeof window.charts["main_chart"] == 'undefined') {
+    create_initial_chart();
+    return;
+  }
+  var first_graph = window.charts["main_chart"];
+  first_graph.series[0].setData(modelData["T"],false);
+  first_graph.series[1].setData(modelData["H"],false);
+  first_graph.series[2].setData(modelData["H_S"],false);
+  first_graph.redraw();
 }
 
 // ---------------------------------------------------------------------------- //
@@ -155,28 +196,28 @@ function update_chart(){
 window.addEventListener("load",create_interactive_forms);
 
 function create_interactive_forms(){
-	//Iterate over all interactive forms
-	var forms = document.getElementsByClassName("interactive_form");
-	for (form of forms) {
-		//iterate over all linked form inputs and link them together
-		var linked_inputs = form.querySelectorAll(".form-linked-inputs");
-		for (linked_input of linked_inputs) {
-			//Get inputs
-			var inputs = linked_input.getElementsByTagName('input');
-			for (var input of inputs) {
-				//Add event handler
-				input.other_inputs = inputs;
-				input.addEventListener('input', function(e){
-					for (input of this.other_inputs){
-						if (this == input){
-							continue;
-						}
-						input.value = this.value;
-					}
-				},false)
-			}
-		}
-	}
+  //Iterate over all interactive forms
+  var forms = document.getElementsByClassName("interactive_form");
+  for (form of forms) {
+    //iterate over all linked form inputs and link them together
+    var linked_inputs = form.querySelectorAll(".form-linked-inputs");
+    for (linked_input of linked_inputs) {
+      //Get inputs
+      var inputs = linked_input.getElementsByTagName('input');
+      for (var input of inputs) {
+        //Add event handler
+        input.other_inputs = inputs;
+        input.addEventListener('input', function(e){
+          for (input of this.other_inputs){
+            if (this == input){
+              continue;
+            }
+            input.value = this.value;
+          }
+        },false)
+      }
+    }
+  }
 }
 
 
@@ -184,38 +225,42 @@ function create_interactive_forms(){
 window.addEventListener("DOMContentLoaded", add_update_params_events)
 //global params
 var params = {};
+params["T_A_0"] = 0;
+params["T_S_0"] = 0;
+params["H_A_0"] = 10.0;
+params["H_S_0"] = 20.0;
 
 function add_update_params_events(){
-	var inputs = document.querySelectorAll("input");
-	for (input of inputs){
-		input.addEventListener('input', function(e){
-			if (this.type == "checkbox"){
-				params[this.id] = this.checked;
-			}
-			else{
-				params[this.id] = parseFloat(this.value);
-			}
-		},false)
-		var event = new Event('input');
-		input.dispatchEvent(event)
-	}
+  var inputs = document.querySelectorAll("input");
+  for (input of inputs){
+    input.addEventListener('input', function(e){
+      if (this.type == "checkbox"){
+        params[this.id] = this.checked;
+      }
+      else{
+        params[this.id] = parseFloat(this.value);
+      }
+    },false)
+    var event = new Event('input');
+    input.dispatchEvent(event)
+  }
 }
 
 //load normally gets executed after domcontentloaded
 window.addEventListener("load", add_model_params_update_event);
 
 function add_model_params_update_event(){
-	var inputs = document.querySelectorAll("input");
-	for (input of inputs){
-		input.addEventListener('input', function(e){
-			//Testing that here in the events for no will see how it works performance wise
-			let model_params_list = ["M","R_0","R_t_H","gamma","xi","phi","nu","lambda_r","lambda_s","eta","n_max","epsilon","Phi","lambda_r_max","xi_ap"];
-			if (model_params_list.indexOf(this.id) > -1){
-				complete_model_run();
-			}
-		},false)
-	}
-}	
+  var inputs = document.querySelectorAll("input");
+  for (input of inputs){
+    input.addEventListener('input', function(e){
+      //Testing that here in the events for no will see how it works performance wise
+      let model_params_list = ["M","R_0","R_t_H","gamma","xi","phi","nu","lambda_r","lambda_s","eta","n_max","epsilon","Phi","lambda_r_max"];
+      if (model_params_list.indexOf(this.id) > -1){
+        complete_model_run();
+      }
+    },false)
+  }
+} 
 
 
 
@@ -241,3 +286,5 @@ function throttle(fn, interval) {
     }
   };
 }
+
+
