@@ -31,6 +31,8 @@ struct data_struct{
 		T.clear();
 		H_S.clear();
 		T_S.clear();
+		H_A.clear();
+		T_A.clear();
 		N.clear();
 		N_obs.clear();
 	};

@@ -51,6 +51,41 @@ void Model::calc_new_cases(){
 }
 
 
+double gamma_pdf(double x,double a,double b){
+	return pow(b,a)*pow(x,a-1.0)*exp(-b*a)/tgamma(a);
+}
+
+vector<double> convolve(const vector<double>& a, const vector<double>& b)
+{
+    int n_a = a.size();
+    int n_b = b.size();
+    vector<double> result(n_a + n_b - 1);
+
+    for (int i = 0; i < n_a + n_b - 1; ++i) {
+        double sum = 0.0;
+        for (int j = 0; j <= i; ++j) {
+            sum += ((j < n_a) && (i-j < n_b)) ? a[j]*b[i-j] : 0.0;
+        }
+        result[i] = sum;
+    }
+    return result;
+}
+
+void Model::calc_new_cases_obs(){
+	//Only works if the model was run atleast once! There is no check for this!
+	vector<double> first_part;
+	vector<double> second_part;
+	for (int i = 0; i < data.time.size(); i++){
+		first_part.push_back( gamma * nu * R_t_T() * data.T[i]
+			+ lambda_s * data.H_S[i]
+			+ lambda_r * data.H[i]
+			+ fmin(n_max,eta*R_t_H*(lambda_s*data.H_S[i] + lambda_r * data.H[i])));
+		second_part.push_back(gamma_pdf(data.time[i],4.0,1.0));
+	}
+	data.N_obs = convolve(first_part,second_part);
+}
+
+
 
 // ---------------------------------------------------------------------------- //
 // dgl stuff 
@@ -169,7 +204,7 @@ void Model::run(double dt, double t_max, double T_S, double T_A, double H_S, dou
 
 
 	// RungeKutta run 
-	for (int t = dt; t < t_max; t=t+dt)
+	for (double t = dt; t < t_max; t=t+dt)
 	{
 		SV = runge_kutta4(dt,t,SV);
 		push_to_data(t,SV);
@@ -178,6 +213,7 @@ void Model::run(double dt, double t_max, double T_S, double T_A, double H_S, dou
 
 	// Calc addittional stuff
 	calc_new_cases();
+	calc_new_cases_obs();
 
 }
 
@@ -192,3 +228,4 @@ void Model::push_to_data(double time, array<double,4> SV){
 
 	data.time.push_back(time);
 }
+

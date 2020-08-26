@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 class Model{
@@ -82,7 +83,7 @@ class Model{
 		void push_to_data(double t, array<double,4> SV);
 
 		void calc_new_cases();
-
+		void calc_new_cases_obs();
 		// ---------------------------------------------------------------------------- //
 		// Variables
 		// ---------------------------------------------------------------------------- //

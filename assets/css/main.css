@@ -2,7 +2,7 @@
 * @Author: Sebastian B. Mohr
 * @Date:   2020-08-21 14:26:50
 * @Last Modified by:   Sebastian
-* @Last Modified time: 2020-08-25 12:55:40
+* @Last Modified time: 2020-08-26 12:48:19
 */
 
 
@@ -122,3 +122,6 @@ input[type="range"]::-webkit-slider-thumb{
 }
 
 
+.advanced_mode{
+	display: none;
+}

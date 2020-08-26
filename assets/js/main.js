@@ -37,7 +37,7 @@ function complete_model_run(){
   //Update params
   update_model_params();
   //Run model
-  model.run(1,50,params["T_A_0"],params["T_S_0"],params["H_A_0"],params["H_S_0"]);
+  model.run(params["dt"],params["t_max"],params["T_A_0"],params["T_S_0"],params["H_A_0"],params["H_S_0"]);
   //Get new data
   get_model_data();
   //Update graph
@@ -71,10 +71,15 @@ function get_model_data(){
   let data = model.data;
 
   //Convert to nice javscript arrays
-  let time_array = data.time();
+  modelData["time"] = data.time();
   modelData["T"] = data.T();
   modelData["H"] = data.H();
   modelData["H_S"] = data.H_S();
+  modelData["T_S"] = data.T_S();
+  modelData["H_A"] = data.H_A();
+  modelData["T_A"] = data.T_A();
+  modelData["N"] = data.N();
+  modelData["N_obs"] = data.N_obs();
 }
 
 
@@ -98,10 +103,18 @@ function create_initial_chart(){
         text: 'Time in days' 
       },
       labels: {
-        format: '{value}'
-      },
+        formatter: function(){
+          return this.value * params["dt"]
+        }
+      }
     },
 
+    yAxis: {
+      title:{
+        text: "Active cases",
+        useHTML: true,
+      },
+    },
     //Hover 
     tooltip:{
       formatter: function(){
@@ -113,6 +126,7 @@ function create_initial_chart(){
     plotOptions:{
         series: {
           marker: {
+              symbol: "circle",
               enabled: false
           },
           lineWidth: 4
@@ -134,7 +148,7 @@ function create_initial_chart(){
               if (toggle) {
                 options = {
                 	type :'logarithmic',
-                	min: 0.1,
+                	min: 1,
                 }
               }
               else{
@@ -158,20 +172,41 @@ function create_initial_chart(){
     series: [{
       name: "Traced",
       data: [modelData["T"],modelData["time"]],
-      color: '#00446f',
+      color: '#006fb9',
+    },
+    {
+      name: "Traced symptomatic",
+      data: [modelData["T_S"],modelData["time"]],
+      color: '#66c2ff',
+      visible: false
+    },
+    {
+      name: "Traced asymptomatic",
+      data: [modelData["T_A"],modelData["time"]],
+      color: '#b3e0ff',
+      visible: false
     },
     {
       name: "Hidden",
       data: [modelData["H"],modelData["time"]],
       dashStyle: 'DashDot',
-      color: '#7bacca'
+      color: '#8f403d'
     },
     {
       name: "Hidden symptomatic",
       data: [modelData["H_S"],modelData["time"]],
-      dashStyle: 'Dot',
-      color: '#006fb9'
-    }]
+      dashStyle: 'DashDot',
+      color: '#ba615e',
+      visible: false
+    },
+    {
+      name: "Hidden asymptomatic",
+      data: [modelData["H_A"],modelData["time"]],
+      dashStyle: 'DashDot',
+      color: '#d9a7a6',
+      visible: false
+    },
+]
 
   })
   window.charts[myChart.renderTo.id] = myChart;
@@ -185,8 +220,12 @@ function update_chart(){
   }
   var first_graph = window.charts["main_chart"];
   first_graph.series[0].setData(modelData["T"],false);
-  first_graph.series[1].setData(modelData["H"],false);
-  first_graph.series[2].setData(modelData["H_S"],false);
+  first_graph.series[1].setData(modelData["T_S"],false);
+  first_graph.series[2].setData(modelData["T_A"],false);
+  first_graph.series[3].setData(modelData["H"],false);
+  first_graph.series[4].setData(modelData["H_S"],false);
+  first_graph.series[5].setData(modelData["H_A"],false);
+  
   first_graph.redraw();
 }
 
@@ -225,10 +264,6 @@ function create_interactive_forms(){
 window.addEventListener("DOMContentLoaded", add_update_params_events)
 //global params
 var params = {};
-params["T_A_0"] = 0;
-params["T_S_0"] = 0;
-params["H_A_0"] = 10.0;
-params["H_S_0"] = 20.0;
 
 function add_update_params_events(){
   var inputs = document.querySelectorAll("input");
@@ -254,13 +289,34 @@ function add_model_params_update_event(){
   for (input of inputs){
     input.addEventListener('input', function(e){
       //Testing that here in the events for no will see how it works performance wise
-      let model_params_list = ["M","R_0","R_t_H","gamma","xi","phi","nu","lambda_r","lambda_s","eta","n_max","epsilon","Phi","lambda_r_max"];
+      let model_params_list = ["M","R_0","R_t_H","gamma","xi",
+      "phi","nu","lambda_r","lambda_s","eta","n_max","epsilon",
+      "Phi","lambda_r_max","T_A_0","T_S_0","H_A_0","H_S_0","dt","t_max"];
       if (model_params_list.indexOf(this.id) > -1){
         complete_model_run();
       }
     },false)
   }
 } 
+
+window.addEventListener("load", add_advanced_mode_event);
+//Advanced mode toggle advanced mode classes
+function add_advanced_mode_event(){
+  var checkbox = document.getElementById("advanced_mode")
+  checkbox.addEventListener("input", function(e){
+    divs = document.getElementsByClassName("advanced_mode") 
+    if(this.checked){
+      for (div of divs){
+        div.style.display = "block";
+      }
+    }
+    else{
+      for (div of divs){
+        div.style.display = "none";
+      }
+    }
+  })
+}
 
 
 

@@ -171,6 +171,27 @@
                 <input type="number" class="form-number" min="0" max="0.01" step="0.0001" value="0.002" id="lambda_r_max">
               </div>
 
+              <div class="advanced_mode">
+                <div class="row form-header">
+                  <label class="form-label col">Initials</label>
+                  <label class="form-label col"></label>
+                </div>
+                <div class="d-flex align-items-center">
+                  T_A <input type="number" class="form-number" value="0" id="T_A_0">
+                  T_S <input type="number" class="form-number" value="0" id="T_S_0">
+                  H_A <input type="number" class="form-number" value="0" id="H_A_0">
+                  H_S <input type="number" class="form-number" value="0" id="H_S_0">
+                </div>
+                <div class="row form-header">
+                  <label class="form-label col">Sim params</label>
+                  <label class="form-label col"></label>
+                </div>
+                <div class="d-flex align-items-center">
+                  dt <input type="number" class="form-number" value="1" step="0.1" id="dt">
+                  t_max <input type="number" class="form-number" value="50" id="t_max">
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -178,7 +199,7 @@
         <div class="col-wrapper-trackntrace animate-flex-width col-lg-8 col-xl-8">
           <div class="card">
             <div class="card-header">
-              Header image
+              Plots
             </div>
             <div class="card-body">
               <div id="main_chart" style="width:100%; height:400px;"></div>
