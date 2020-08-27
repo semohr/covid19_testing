@@ -49,3 +49,14 @@ val data_struct::getN_obs(){
 	double* a = &N_obs[0];
 	return val(typed_memory_view(N_obs.size(),a));	
 }
+
+
+//Reproduction number
+val data_struct::getR_t_obs(){
+	double* a = &R_t_obs[0];
+	return val(typed_memory_view(R_t_obs.size(),a));
+}
+val data_struct::getR_t_eff(){
+	double* a = &R_t_eff[0];
+	return val(typed_memory_view(R_t_eff.size(),a));	
+}

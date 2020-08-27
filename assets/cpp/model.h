@@ -74,6 +74,7 @@ class Model{
 		// ---------------------------------------------------------------------------- //
 		Model(); //Constructor
 		~Model(); //Deconstructor
+		void run(double dt, double t_max, double T_0, double H_0);
 		void run(double dt, double t_max, double T_S, double T_A, double H_S, double H_A); //Main entry point also passed to js
 		void get_data(double* in_data);
 
@@ -84,6 +85,9 @@ class Model{
 
 		void calc_new_cases();
 		void calc_new_cases_obs();
+
+		void calc_R_t_obs();
+		void calc_R_t_eff();
 		// ---------------------------------------------------------------------------- //
 		// Variables
 		// ---------------------------------------------------------------------------- //
@@ -101,6 +105,10 @@ class Model{
 		double epsilon; //Missed contacts(traced)
 		double Phi; //Influx rate (hidden)
 		double lambda_r_max; //Maximal test capacity per capita
+
+		double _dt;
+		double _t_max;
+
 
 		//calculatable from the above
 		double R_t_T(); //Reproduction number (traced)

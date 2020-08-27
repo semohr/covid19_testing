@@ -24,6 +24,9 @@ struct data_struct{
 	vector<double> N;
 	vector<double> N_obs;
 
+	//Reproduction number
+	vector<double> R_t_obs;
+	vector<double> R_t_eff;
 
 	void clear(){
 		time.clear();
@@ -35,6 +38,8 @@ struct data_struct{
 		T_A.clear();
 		N.clear();
 		N_obs.clear();
+		R_t_obs.clear();
+		R_t_eff.clear();
 	};
 
 	//Declaration in communication cpp
@@ -55,4 +60,8 @@ struct data_struct{
 	//New cases
 	val getN();
 	val getN_obs();
+
+	//New cases
+	val getR_t_obs();
+	val getR_t_eff();
 };

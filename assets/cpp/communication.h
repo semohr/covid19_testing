@@ -27,7 +27,12 @@ EMSCRIPTEN_BINDINGS(data) {
 		//New cases
 		.function("N",&data_struct::getN)
 		.function("N_obs",&data_struct::getN_obs)
+		
+		//Reproduction number
+		.function("R_t_obs",&data_struct::getR_t_obs)
+		.function("R_t_eff",&data_struct::getR_t_eff)
 		;
+
 }
 
 // ---------------------------------------------------------------------------- //
@@ -39,7 +44,7 @@ EMSCRIPTEN_BINDINGS(model) {
 		.constructor<>()
 
 		//Main entry point
-		.function("run",&Model::run)
+		.function("run",select_overload<void(double,double,double,double)>(&Model::run))
 
 		//Link to our data defined above
 		.property("data",&Model::data)

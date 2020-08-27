@@ -75,16 +75,76 @@ void Model::calc_new_cases_obs(){
 	//Only works if the model was run atleast once! There is no check for this!
 	vector<double> first_part;
 	vector<double> second_part;
+	double mag = 0.0;
+	double gamm_pdf;
 	for (int i = 0; i < data.time.size(); i++){
 		first_part.push_back( gamma * nu * R_t_T() * data.T[i]
 			+ lambda_s * data.H_S[i]
 			+ lambda_r * data.H[i]
 			+ fmin(n_max,eta*R_t_H*(lambda_s*data.H_S[i] + lambda_r * data.H[i])));
-		second_part.push_back(gamma_pdf(data.time[i],4.0,1.0));
+
+		gamm_pdf = gamma_pdf(data.time[i],4.0,1.0);
+		second_part.push_back(gamm_pdf);
+		mag += gamm_pdf;
 	}
-	data.N_obs = convolve(first_part,second_part);
+	//Normalize pdf
+	for (int i = 0; i < second_part.size(); ++i)
+	{
+		second_part[i] = second_part[i] * second_part.size() / mag ;
+	}
+	
+	data.N_obs = first_part;
 }
 
+
+
+void Model::calc_R_t_obs(){
+	double t;
+	int i,j;
+	bool found;
+	for (i = 0; i < data.time.size(); ++i)
+	{
+		t = data.time[i];
+		//Get t-4
+		found = false;
+		for (j = i; j > -1; j--)
+		{
+			if (data.time[j]<=t-4.0)
+			{
+				found = true;
+				break; //j found
+			}
+		}
+		if (found)
+		{
+			data.R_t_obs.push_back(data.N_obs[i]/data.N_obs[j]);
+		}
+	}
+}
+
+void Model::calc_R_t_eff(){
+	double t;
+	int i,j;
+	bool found;
+	for (i = 0; i < data.time.size(); ++i)
+	{
+		t = data.time[i];
+		//Get t-4
+		found = false;
+		for (j = i; j > -1; j--)
+		{
+			if (data.time[j]<=t-4.0)
+			{
+				found = true;
+				break; //j found
+			}
+		}
+		if (found)
+		{
+			data.R_t_eff.push_back(data.N[i]/data.N[j]);
+		}
+	}
+}
 
 
 // ---------------------------------------------------------------------------- //
@@ -170,6 +230,14 @@ array<double,4> Model::runge_kutta4(double dt, double t, array<double,4> SV){
 // MAIN ENTRY POINT
 // ---------------------------------------------------------------------------- //
 
+void Model::run(double dt, double t_max, double T_0, double H_0){
+	double T_S = (1-xi_ap())*T_0;
+	double T_A = xi_ap()* T_0;
+	double H_S = (1-xi_ap())*H_0;
+	double H_A = xi_ap()*H_0;
+
+	run(dt,t_max,T_S,T_A,H_S,H_A);
+}
 void Model::run(double dt, double t_max, double T_S, double T_A, double H_S, double H_A) {
 	/* Runs model and populates the data arrays!
 	
@@ -189,6 +257,8 @@ void Model::run(double dt, double t_max, double T_S, double T_A, double H_S, dou
 		initial H_A value
 	*/
 
+	_dt = dt;
+	_t_max = t_max; 
 
 	// Clear old data
 	data.clear();
@@ -214,6 +284,9 @@ void Model::run(double dt, double t_max, double T_S, double T_A, double H_S, dou
 	// Calc addittional stuff
 	calc_new_cases();
 	calc_new_cases_obs();
+
+	calc_R_t_obs();
+	calc_R_t_eff();
 
 }
 

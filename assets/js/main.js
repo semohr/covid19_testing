@@ -18,6 +18,7 @@ function setup(){
     setTimeout(setup, 10);
     return;
   }
+
   //Create global model instance
   model = new Module.Model();
 
@@ -26,6 +27,9 @@ function setup(){
 
   // Add events to buttons
   add_update_params_events();
+
+  // Hide loading
+  document.getElementById("loading").style.display = "none";
 }
 
 function complete_model_run(){
@@ -36,8 +40,10 @@ function complete_model_run(){
 
   //Update params
   update_model_params();
+
   //Run model
-  model.run(params["dt"],params["t_max"],params["T_A_0"],params["T_S_0"],params["H_A_0"],params["H_S_0"]);
+
+  model.run(params["dt"],params["t_max"],params["T_0"],params["H_0"]);
   //Get new data
   get_model_data();
   //Update graph
@@ -80,6 +86,8 @@ function get_model_data(){
   modelData["T_A"] = data.T_A();
   modelData["N"] = data.N();
   modelData["N_obs"] = data.N_obs();
+  modelData["R_t_obs"] = data.R_t_obs();
+  modelData["R_t_eff"] = data.R_t_eff();
 }
 
 
@@ -87,89 +95,32 @@ function get_model_data(){
 // Highcharts
 // ---------------------------------------------------------------------------- //
 window.charts = {}
+
+
+
+
+
+
 var toggle = true;
 function create_initial_chart(){
-  var myChart = Highcharts.chart('main_chart', {
-    title: {
-      text: 'Compartments',
-      renderTo: 'main_chart'
-    },
-    subtitle:{
-      text: 'Total people in the corresponding traced or hidden compartments.'
-    },
 
-    xAxis: {
-      title: {
-        text: 'Time in days' 
-      },
-      labels: {
-        formatter: function(){
-          return this.value * params["dt"]
-        }
-      }
-    },
+  //We create two charts for now
 
-    yAxis: {
-      title:{
-        text: "Active cases",
-        useHTML: true,
-      },
-    },
-    //Hover 
-    tooltip:{
-      formatter: function(){
-        return "There are "+this.y.toFixed(0)+" ppl in the "+this.series.name+" pool </b> at "+this.x.toFixed(0)+" days after start.";
-      }
-    },
-
-    //Disable markers
-    plotOptions:{
-        series: {
-          marker: {
-              symbol: "circle",
-              enabled: false
-          },
-          lineWidth: 4
-        }
-    },
-
-    //Remove highchart credit ;)
-    credits: {
-        enabled: false
-    },
-
-    //Export button for png svg and other
-    exporting: {
-        enabled: true,
-        buttons: {
-          costomButtn: {
-            text: 'Toggle logscale',
-            onclick: function (e) {
-              if (toggle) {
-                options = {
-                	type :'logarithmic',
-                	min: 1,
-                }
-              }
-              else{
-              	options = {
-              		type :'linear',
-              		min: 0.0,
-              	}
-                
-              }
-
-              this.update({
-                yAxis: options,
-              });
-              toggle = !toggle
-            },
-          }
-        }
-    },
-
-    //Data
-    series: [{
+  var charttitle = [
+      "Compartments",
+      "New Cases",
+      "Reproduction numbers"];
+  var chartsubtitles = [
+      'Total people in the corresponding traced or hidden compartments.',
+      'Daily new infections observed and true numbers.',
+      'Effective and observed reproduction numbers over time.'];
+  var chartyaxistitle = [
+      "Cases (total)",
+      "Cases (per day)",
+      "Reproduction number"];
+  var chartdata = [
+    //First
+    [{
       name: "Traced",
       data: [modelData["T"],modelData["time"]],
       color: '#006fb9',
@@ -190,13 +141,13 @@ function create_initial_chart(){
       name: "Hidden",
       data: [modelData["H"],modelData["time"]],
       dashStyle: 'DashDot',
-      color: '#8f403d'
+      color: '#b94100'
     },
     {
       name: "Hidden symptomatic",
       data: [modelData["H_S"],modelData["time"]],
       dashStyle: 'DashDot',
-      color: '#ba615e',
+      color: '#b91300',
       visible: false
     },
     {
@@ -206,27 +157,159 @@ function create_initial_chart(){
       color: '#d9a7a6',
       visible: false
     },
-]
+    ],
+    //Second
+    [{
+      name: "New cases observed",
+      data: [modelData["N_obs"],modelData["time"]],
+      color: '#8200b9',
+      visible: true,
+    },
+    {
+      name: "New cases true",
+      data: [modelData["N"],modelData["time"]],
+      dashStyle: 'DashDot',
+      color: '#8200b9',
+      visible: false,
+    },
+    ],
+    //Third
+    [{
+      name: "Observed reproduction number",
+      data: [modelData["R_t_obs"],modelData["time"]],
+      color: '#8200b9',
+      visible: true,
+    },
+    {
+      name: "Effectiv reproduction number",
+      data: [modelData["R_t_eff"],modelData["time"]],
+      dashStyle: 'DashDot',
+      color: '#8200b9',
+      visible: false,
+    },
+    ],    
+    ]
+  for(let i = 0; i < 3; i++){
+    var chartDiv = document.createElement('div');
+    chartDiv.className = 'chart';
+    document.getElementById('hs-container').appendChild(chartDiv);
 
-  })
-  window.charts[myChart.renderTo.id] = myChart;
-  return;
+    var myChart = Highcharts.chart(chartDiv,{
+      chart: {
+        spacingTop: 20,
+        spacingBottom: 20,
+      },
+      title: {
+        text: charttitle[i],
+      },
+      subtitle:{
+        text: chartsubtitles[i],
+      },
+      credits: {
+        enabled: false
+      },
+      xAxis: {
+        title: {
+          text: 'Time in days',
+        },
+        labels: {
+          formatter: function(){
+            return this.value * params["dt"]
+          }
+        },
+        crosshair: true,
+        /*
+        events: {
+            setExtremes: syncExtremes
+        },
+        */
+      },
+      yAxis: {
+        title:{
+          text: chartyaxistitle[i],
+          useHTML: true,
+        },
+      },
+      series: chartdata[i],
+
+      //Additions
+      
+      plotOptions:{
+          series: {
+            marker: {
+                symbol: "circle",
+                enabled: false //Disable markers
+            },
+            lineWidth: 4
+          }
+      },
+      //Export button for png svg and other
+      exporting: {
+          enabled: true,
+          buttons: {
+            costomButtn: {
+              text: 'Toggle logscale',
+              onclick: function (e) {
+                if (toggle) {
+                  options = {
+                    type :'logarithmic',
+                    min: 1,
+                  }
+                }
+                else{
+                  options = {
+                    type :'linear',
+                    min: 0.0,
+                  }
+                }
+                this.update({
+                  yAxis: options,
+                });
+                toggle = !toggle
+              },
+            }
+          }
+        },
+      })
+    window.charts[i] = myChart;
+    }
 }
 
 function update_chart(){
-  if (typeof window.charts["main_chart"] == 'undefined') {
+  //First chart
+  if (typeof window.charts[0] == 'undefined') {
     create_initial_chart();
     return;
   }
-  var first_graph = window.charts["main_chart"];
-  first_graph.series[0].setData(modelData["T"],false);
-  first_graph.series[1].setData(modelData["T_S"],false);
-  first_graph.series[2].setData(modelData["T_A"],false);
-  first_graph.series[3].setData(modelData["H"],false);
-  first_graph.series[4].setData(modelData["H_S"],false);
-  first_graph.series[5].setData(modelData["H_A"],false);
-  
-  first_graph.redraw();
+  var chart = window.charts[0];
+  chart.series[0].setData(modelData["T"],false);
+  chart.series[1].setData(modelData["T_S"],false);
+  chart.series[2].setData(modelData["T_A"],false);
+  chart.series[3].setData(modelData["H"],false);
+  chart.series[4].setData(modelData["H_S"],false);
+  chart.series[5].setData(modelData["H_A"],false);
+  chart.redraw();
+
+  //Second chart
+  if (typeof window.charts[1] == 'undefined') {
+    create_initial_chart();
+    return;
+  }
+  var chart = window.charts[1];
+  chart.series[1].setData(modelData["N"],false);
+  chart.series[0].setData(modelData["N_obs"],false);
+  chart.redraw(); 
+
+  //Third chart
+  if (typeof window.charts[2] == 'undefined') {
+    create_initial_chart();
+    return;
+  }
+  var chart = window.charts[2];
+  chart.series[0].setData(modelData["R_t_obs"],false);
+  chart.series[1].setData(modelData["R_t_eff"],false);
+  chart.redraw(); 
+
 }
 
 // ---------------------------------------------------------------------------- //
@@ -291,7 +374,7 @@ function add_model_params_update_event(){
       //Testing that here in the events for no will see how it works performance wise
       let model_params_list = ["M","R_0","R_t_H","gamma","xi",
       "phi","nu","lambda_r","lambda_s","eta","n_max","epsilon",
-      "Phi","lambda_r_max","T_A_0","T_S_0","H_A_0","H_S_0","dt","t_max"];
+      "Phi","lambda_r_max","T_0","H_0","dt","t_max"];
       if (model_params_list.indexOf(this.id) > -1){
         complete_model_run();
       }
