@@ -74,12 +74,12 @@
               </div>
 
               <div class="row form-header">
-                <label class="form-label col">Basic reproduction number</label>
-                <label class="form-label col"><math>R<sub>0</sub></math></label>
+                <label class="form-label col">Upper limit for simulation time</label>
+                <label class="form-label col"><math>t<sub>max</sub></math></label>
               </div>
-              <div class="form-linked-inputs d-flex align-items-center disabled">
-                <input type="range" class="form-range" min="2.2" max="4.4" step="0.01" value="3.28" id="R_0">
-                <input type="number" class="form-number" min="2.2" max="4.4" step="0.01" value="3.28" id="R_0">
+              <div class="form-linked-inputs d-flex align-items-center">
+                <input type="range" class="form-range" min="1" max="5000" step="1" value="100" id="t_max">
+                <input type="number" class="form-number" min="1" max="5000" step="1" value="100" id="t_max">
               </div>
 
               <div class="row form-header">
@@ -207,7 +207,6 @@
                 </div>
                 <div class="d-flex align-items-center">
                   dt <input type="number" class="form-number" value="1" step="0.1" id="dt">
-                  t_max <input type="number" class="form-number" value="50" id="t_max">
                 </div>
               </div>
 

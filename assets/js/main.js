@@ -37,13 +37,11 @@ function complete_model_run(){
   it gets and syncs all inputs with the wasm model, than 
   runs the model, gets new data from wasm and updates the graph
   */
-
   //Update params
   update_model_params();
 
   //Run model
-
-  model.run(params["dt"],params["t_max"],params["T_0"],params["H_0"]);
+  throttle(model.run(1,params["t_max"],params["T_0"],params["H_0"]),  150);
   //Get new data
   get_model_data();
   //Update graph
@@ -53,7 +51,6 @@ function complete_model_run(){
 function update_model_params(){
   //Syncs the javascript params to the wasm model params
   model.M           = params["M"];
-  model.R_0         = params["R_0"];
   model.R_t_H       = params["R_t_H"];
   model.gamma       = params["gamma"];
   model.xi          = params["xi"];
@@ -177,14 +174,14 @@ function create_initial_chart(){
     [{
       name: "Observed reproduction number",
       data: [modelData["R_t_obs"],modelData["time"]],
-      color: '#8200b9',
+      color: '#eb4034',
       visible: true,
     },
     {
       name: "Effectiv reproduction number",
       data: [modelData["R_t_eff"],modelData["time"]],
       dashStyle: 'DashDot',
-      color: '#8200b9',
+      color: '#eb4034',
       visible: false,
     },
     ],    
@@ -198,6 +195,9 @@ function create_initial_chart(){
       chart: {
         spacingTop: 20,
         spacingBottom: 20,
+        style: {
+          fontFamily: "Source Serif Pro"
+        }
       },
       title: {
         text: charttitle[i],

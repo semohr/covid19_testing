@@ -2,7 +2,7 @@
 * @Author: Sebastian B. Mohr
 * @Date:   2020-08-21 14:26:50
 * @Last Modified by:   Sebastian
-* @Last Modified time: 2020-08-27 11:36:52
+* @Last Modified time: 2020-08-27 16:15:39
 */
 
 
@@ -80,15 +80,28 @@ a.navbar-brand{
 }
 
 input[type="range"]::-ms-thumb{
+	background: #006fb9;
 }
 
 input[type="range"]::-moz-range-thumb{
+	background: #006fb9;
 }
 
 
 input[type="range"]::-webkit-slider-thumb{
+	background: #006fb9;
 }
 
+
+
+.form-num{
+	text-align: right;
+}
+
+.form-num input{
+	width:40% !important;
+	right
+}
 /*--------------------------------------------------------------
 # Card
 --------------------------------------------------------------*/
@@ -126,13 +139,7 @@ input[type="range"]::-webkit-slider-thumb{
 	display: none;
 }
 
-.form-num{
-	text-align: right;
-}
 
-.form-num input{
-	width:40% !important;
-}
 
 /*--------------------------------------------------------------
 # Loading
