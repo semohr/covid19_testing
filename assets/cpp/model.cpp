@@ -84,7 +84,7 @@ void Model::calc_new_cases_obs(){
 			+ fmin(n_max,eta*R_t_H*(lambda_s*data.H_S[i] + lambda_r * data.H[i])));
 
 		gamm_pdf = gamma_pdf(data.time[i],4.0,1.0);
-		second_part.push_back(gamm_pdf);
+		second_part.push_back(floor(gamm_pdf));
 		mag += gamm_pdf;
 	}
 	//Normalize pdf

@@ -41,10 +41,12 @@ function complete_model_run(){
   update_model_params();
 
   //Run model
-  throttle(model.run(1,params["t_max"],params["T_0"],params["H_0"]),  150);
+  throttle(model.run(1.0,params["t_max"],params["T_0"],params["H_0"]),  150);
   //Get new data
   get_model_data();
+
   //Update graph
+  update_chart();
   update_chart();
 }
 
@@ -95,9 +97,6 @@ window.charts = {}
 
 
 
-
-
-
 var toggle = true;
 function create_initial_chart(){
 
@@ -138,13 +137,13 @@ function create_initial_chart(){
       name: "Hidden",
       data: [modelData["H"],modelData["time"]],
       dashStyle: 'DashDot',
-      color: '#b94100'
+      color: '#b91300'
     },
     {
       name: "Hidden symptomatic",
       data: [modelData["H_S"],modelData["time"]],
       dashStyle: 'DashDot',
-      color: '#b91300',
+      color: '#b94100',
       visible: false
     },
     {
@@ -347,7 +346,7 @@ function create_interactive_forms(){
 window.addEventListener("DOMContentLoaded", add_update_params_events)
 //global params
 var params = {};
-
+params["dt"] = 1.0;
 function add_update_params_events(){
   var inputs = document.querySelectorAll("input");
   for (input of inputs){
@@ -359,8 +358,14 @@ function add_update_params_events(){
         params[this.id] = parseFloat(this.value);
       }
     },false)
-    var event = new Event('input');
-    input.dispatchEvent(event)
+
+    //Do it once at start
+    if (input.type == "checkbox") {
+      params[input.id]=input.checked;
+    }
+    else{
+      params[input.id]=parseFloat(input.value);
+    }
   }
 }
 
@@ -382,7 +387,7 @@ function add_model_params_update_event(){
   }
 } 
 
-window.addEventListener("load", add_advanced_mode_event);
+
 //Advanced mode toggle advanced mode classes
 function add_advanced_mode_event(){
   var checkbox = document.getElementById("advanced_mode")
@@ -401,6 +406,95 @@ function add_advanced_mode_event(){
   })
 }
 
+
+// ---------------------------------------------------------------------------- //
+// Buttons
+// ---------------------------------------------------------------------------- //
+
+window.addEventListener("load", reset_button);
+
+function reset_button(){
+  var btn = document.getElementById("reset");
+
+  btn.addEventListener("click", function(){
+    //Set params 
+    params["M"]            = 80000000;
+    params["R_0"]          = 3.28;
+    params["R_t_H"]        = 1.8;
+    params["gamma"]        = 0.1;
+    params["xi"]           = 0.15;
+    params["phi"]          = 0.2;
+    params["nu"]           = 0.10;
+    params["lambda_r"]     = 0.0;
+    params["lambda_s"]     = 0.1;
+    params["eta"]          = 0.66;
+    params["n_max"]        = 300;
+    params["epsilon"]      = 0.1;
+    params["Phi"]          = 15.0;
+    params["lambda_r_max"] = 0.002;
+
+    //Reset sliders/forms
+    update_slider_forms();
+    complete_model_run();
+  })
+}
+
+function update_slider_forms(){
+  var inputs = document.querySelectorAll("input");
+  let model_params_list = ["M","R_0","R_t_H","gamma","xi",
+  "phi","nu","lambda_r","lambda_s","eta","n_max","epsilon",
+  "Phi","lambda_r_max","T_0","H_0","dt","t_max"];
+  for (input of inputs){
+    if (model_params_list.indexOf(input.id) > -1){
+      input.value = params[input.id];
+    }
+  }
+}
+
+
+function downloadObjectAsJson(exportObj, exportName){
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href",     dataStr);
+  downloadAnchorNode.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
+window.addEventListener("load", save_button);
+function save_button(){
+  var btn = document.getElementById("save");
+
+  btn.addEventListener("click", function(){
+    downloadObjectAsJson(params, "tti-config");
+  })
+}
+
+window.addEventListener("load", load_button);
+function load_button(){
+  var btn = document.getElementById("load");
+
+  btn.addEventListener("change", function(){
+    // Handel files
+    if (this.files.length === 0) {
+        console.log('No file is selected');
+        return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var res = JSON.parse(e.target.result);
+      for (item in res){
+        params[item] = res[item];
+      }
+      update_slider_forms();
+      complete_model_run();
+    }
+    reader.readAsText(this.files[0]);
+  })
+
+}
 
 
 // ---------------------------------------------------------------------------- //
@@ -425,5 +519,6 @@ function throttle(fn, interval) {
     }
   };
 }
+
 
 
