@@ -232,7 +232,6 @@ function create_initial_chart(){
       series: chartdata[i],
 
       //Additions
-      
       plotOptions:{
           series: {
             marker: {
@@ -269,6 +268,10 @@ function create_initial_chart(){
             }
           }
         },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.y:.2f}</b><br/>',
+          shared: true
+        }
       })
     window.charts[i] = myChart;
     }
