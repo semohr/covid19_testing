@@ -51,6 +51,26 @@ function complete_model_run(){
 }
 
 function update_model_params(){
+  //Check if the params are valid!
+  var range = {};
+  range["R_t_H"] = [0,5];
+  range["gamma"] = [0.08,0.12];
+  range["xi"] =    [0.12,0.33];
+  range["phi"] =   [0.1,0.4];
+  range["nu"] =    [0,0.4];
+  range["lambda_r"]=[0,0.02];
+  range["lambda_s"]=[0,1];
+  range["eta"] = [0,1];
+  range["n_max"] = [100,3000];
+  range["epsilon"] = [0,1];
+  range["Phi"] = [0,1000];
+
+  for (var key in range){
+    if ((params[key] > range[key][1]) || (params[key] < range[key][0])){
+      alert("Parameter "+key+ " is in an unexpected range!\nUndefined behaviour possible!")
+    }
+  }
+
   //Syncs the javascript params to the wasm model params
   model.R_t_H       = params["R_t_H"];
   model.gamma       = params["gamma"];
