@@ -52,7 +52,6 @@ function complete_model_run(){
 
 function update_model_params(){
   //Syncs the javascript params to the wasm model params
-  model.M           = params["M"];
   model.R_t_H       = params["R_t_H"];
   model.gamma       = params["gamma"];
   model.xi          = params["xi"];
@@ -64,7 +63,6 @@ function update_model_params(){
   model.n_max       = params["n_max"];
   model.epsilon     = params["epsilon"];
   model.Phi         = params["Phi"];
-  model.lambda_r_max= params["lambda_r_max"];
   return;
 }
 
@@ -271,7 +269,11 @@ function create_initial_chart(){
         tooltip: {
           pointFormat: '{series.name}: <b>{point.y:.2f}</b><br/>',
           shared: true
+        },
+        legend:{
+          symbolWidth: 40
         }
+        
       })
     window.charts[i] = myChart;
     }
