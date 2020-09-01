@@ -3,20 +3,20 @@
 Model::Model(){
 	//Constructor
 	//Set default values
-	M     			 = 80000000;
-	R_0   			 = 3.28;
-	R_t_H 			 = 1.8;
-	gamma 			 = 0.1;
-	xi    			 = 0.15;
-	phi   			 = 0.2;
-	nu    			 = 0.10;
-	lambda_r 		 = 0.0;
-	lambda_s 	   = 0.1;
-	eta          = 0.66;
-	n_max        = 300;
-	epsilon      = 0.1;
-	Phi          = 15.0;
-  lambda_r_max = 0.002;
+	M     			= 80000000;
+	R_0   			= 3.28;
+	R_t_H 			= 1.8;
+	gamma 			= 0.1;
+	xi    			= 0.15;
+	phi   			= 0.2;
+	nu    			= 0.10;
+	lambda_r 		= 0.0;
+	lambda_s 	   	= 0.1;
+	eta          	= 0.66;
+	n_max        	= 300;
+	epsilon      	= 0.1;
+	Phi          	= 15.0;
+ 	lambda_r_max 	= 0.002;
 }
 Model::~Model() {
 	std::cout << "Deconstructor" << std::endl;
@@ -71,29 +71,41 @@ vector<double> convolve(const vector<double>& a, const vector<double>& b)
     return result;
 }
 
+
 void Model::calc_new_cases_obs(){
 	//Only works if the model was run atleast once! There is no check for this!
 	vector<double> first_part;
 	vector<double> second_part;
-	double mag = 0.0;
 	double gamm_pdf;
-	for (int i = 0; i < data.time.size(); i++){
+
+	for (int i = 0; i < data.time.size(); ++i)
+	{
 		first_part.push_back( gamma * nu * R_t_T() * data.T[i]
 			+ lambda_s * data.H_S[i]
 			+ lambda_r * data.H[i]
 			+ fmin(n_max,eta*R_t_H*(lambda_s*data.H_S[i] + lambda_r * data.H[i])));
+	}
 
+	// For gamma kernel we need approx 11days
+	double dt_in_days = 12/_dt;
+	for (int i = 0; i < dt_in_days; i++){
 		gamm_pdf = gamma_pdf(data.time[i],4.0,1.0);
-		second_part.push_back(floor(gamm_pdf));
-		mag += gamm_pdf;
+		second_part.push_back(gamm_pdf);
 	}
 	//Normalize pdf
+	double sum = 0.0;
 	for (int i = 0; i < second_part.size(); ++i)
 	{
-		second_part[i] = second_part[i] * second_part.size() / mag ;
+		sum += second_part[i];
 	}
-	
-	data.N_obs = first_part;
+	for (int i = 0; i < second_part.size(); ++i)
+	{
+		second_part[i] = second_part[i]/sum;
+	}
+
+	data.N_obs = convolve(first_part,second_part);
+	//We remove from the front the half size of conv. fromthe vector
+	data.N_obs.erase(data.N_obs.begin(),data.N_obs.begin()+int(dt_in_days/2));
 }
 
 
