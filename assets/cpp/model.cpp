@@ -52,7 +52,7 @@ void Model::calc_new_cases(){
 
 
 double gamma_pdf(double x,double a,double b){
-	return pow(b,a)*pow(x,a-1.0)*exp(-b*a)/tgamma(a);
+	return pow(x,a-1.0)*exp(-x)/tgamma(a);
 }
 
 vector<double> convolve(const vector<double>& a, const vector<double>& b)
@@ -89,6 +89,7 @@ void Model::calc_new_cases_obs(){
 	// For gamma kernel we need approx 11days
 	double dt_in_days = 12/_dt;
 	for (int i = 0; i < dt_in_days; i++){
+		cout << data.time[i] << endl;
 		gamm_pdf = gamma_pdf(data.time[i],4.0,1.0);
 		second_part.push_back(gamm_pdf);
 	}
@@ -101,6 +102,7 @@ void Model::calc_new_cases_obs(){
 	for (int i = 0; i < second_part.size(); ++i)
 	{
 		second_part[i] = second_part[i]/sum;
+		cout << second_part[i] << endl;
 	}
 
 	data.N_obs = convolve(first_part,second_part);
