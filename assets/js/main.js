@@ -132,6 +132,7 @@ function create_initial_chart(){
       "Cases (total)",
       "Cases (per day)",
       "Reproduction number"];
+  var yAxis_max = [null,null,2.0];
   var chartdata = [
     //First
     [{
@@ -246,6 +247,7 @@ function create_initial_chart(){
           text: chartyaxistitle[i],
           useHTML: true,
         },
+        max: yAxis_max[i],
       },
       series: chartdata[i],
 
