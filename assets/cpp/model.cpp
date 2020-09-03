@@ -107,7 +107,7 @@ void Model::calc_new_cases_obs(){
 
 	data.N_obs = convolve(first_part,second_part);
 	//We remove from the front the half size of conv. fromthe vector
-	data.N_obs.erase(data.N_obs.begin(),data.N_obs.begin()+int(dt_in_days/2));
+	data.N_obs.erase(data.N_obs.end()-int(dt_in_days),data.N_obs.end());
 }
 
 

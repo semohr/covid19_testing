@@ -180,7 +180,7 @@ function create_initial_chart(){
       visible: true,
     },
     {
-      name: "New cases true",
+      name: "Total new cases",
       data: [modelData["N"],modelData["time"]],
       dashStyle: 'DashDot',
       color: '#8200b9',
