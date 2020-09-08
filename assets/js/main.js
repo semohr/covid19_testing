@@ -414,7 +414,7 @@ function add_model_params_update_event(){
   }
 } 
 
-
+window.addEventListener("load", add_advanced_mode_event);
 //Advanced mode toggle advanced mode classes
 function add_advanced_mode_event(){
   var checkbox = document.getElementById("advanced_mode")
@@ -431,6 +431,7 @@ function add_advanced_mode_event(){
       }
     }
   })
+  checkbox.dispatchEvent(new Event("input"));
 }
 
 

@@ -79,7 +79,7 @@
         <div class="col-wrapper-trackntrace animate-flex-width col-lg-4 col-xl-4">
           <div class="card">
             <div class="card-header">
-              Vars
+              Vars <div id="advanced-checkbox" align="right">Advanced mode<input id="advanced_mode" type="checkbox"></div>
             </div>
             <div class="card-body interactive_form">
               <div class="row form-header">
@@ -119,39 +119,12 @@
               </div>
               <hr>
               <div class="row form-header">
-                <label class="form-label col">Case discharge rate</label>
-                <label class="form-label col"><math> &Gamma;</label>
-              </div>
-              <div class="form-linked-inputs d-flex align-items-center">
-                <input type="range" class="form-range" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
-                <input type="number" class="form-number" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
-              </div>
-              <hr>
-              <div class="row form-header">
-                <label class="form-label col">Asymptomatic ratio</label>
-                <label class="form-label col"><math> &xi;</label>
-              </div>
-              <div class="form-linked-inputs d-flex align-items-center">
-                <input type="range" class="form-range" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
-                <input type="number" class="form-number" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
-              </div>
-              <hr>
-              <div class="row form-header">
                 <label class="form-label col">Fraction skipping testing</label>
                 <label class="form-label col"><math> &phi;</label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0.1" max="0.4" step="0.001" value="0.2" id="phi">
                 <input type="number" class="form-number" min="0.1" max="0.4" step="0.001" value="0.2" id="phi">
-              </div>
-              <hr>
-              <div class="row form-header">
-                <label class="form-label col">Isolation factor (traced)</label>
-                <label class="form-label col"><math> &nu;</label>
-              </div>
-              <div class="form-linked-inputs d-flex align-items-center">
-                <input type="range" class="form-range" min="0.0" max="0.4" step="0.001" value="0.1" id="nu">
-                <input type="number" class="form-number" min="0.0" max="0.4" step="0.001" value="0.1" id="nu">
               </div>
               <hr>
               <div class="row form-header">
@@ -170,15 +143,6 @@
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0.0" max="1.0" step="0.01" value="0.1" id="lambda_s">
                 <input type="number" class="form-number" min="0.0" max="1.0" step="0.01" value="0.1" id="lambda_s">
-              </div>
-              <hr>
-              <div class="row form-header">
-                <label class="form-label col">Tracing efficiency</label>
-                <label class="form-label col"><math> &eta;</label>
-              </div>
-              <div class="form-linked-inputs d-flex align-items-center">
-                <input type="range" class="form-range" min="0.0" max="1.0" step="0.01" value="0.66" id="eta">
-                <input type="number" class="form-number" min="0.0" max="1.0" step="0.01" value="0.66" id="eta">
               </div>
               <hr>
               <div class="row form-header">
@@ -208,8 +172,43 @@
                 <input type="number" class="form-number" min="0" max="1000" step="1" value="15" id="Phi">
               </div>
               <div class="advanced_mode">
+                <hr>
+                <div class="row form-header">
+                  <label class="form-label col">Isolation factor (traced)</label>
+                  <label class="form-label col"><math> &nu;</label>
+                </div>
+                <div class="form-linked-inputs d-flex align-items-center">
+                  <input type="range" class="form-range" min="0.0" max="0.4" step="0.001" value="0.1" id="nu">
+                  <input type="number" class="form-number" min="0.0" max="0.4" step="0.001" value="0.1" id="nu">
+                </div>
+                <hr>
+                <div class="row form-header">
+                  <label class="form-label col">Case discharge rate</label>
+                  <label class="form-label col"><math> &Gamma;</label>
+                </div>
+                <div class="form-linked-inputs d-flex align-items-center">
+                  <input type="range" class="form-range" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
+                  <input type="number" class="form-number" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
+                </div>
+                <hr>
+                <div class="row form-header">
+                  <label class="form-label col">Asymptomatic ratio</label>
+                  <label class="form-label col"><math> &xi;</label>
+                </div>
+                <div class="form-linked-inputs d-flex align-items-center">
+                  <input type="range" class="form-range" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
+                  <input type="number" class="form-number" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
+                </div>
+                <hr>
+                <div class="row form-header">
+                  <label class="form-label col">Tracing efficiency</label>
+                  <label class="form-label col"><math> &eta;</label>
+                </div>
+                <div class="form-linked-inputs d-flex align-items-center">
+                  <input type="range" class="form-range" min="0.0" max="1.0" step="0.01" value="0.66" id="eta">
+                  <input type="number" class="form-number" min="0.0" max="1.0" step="0.01" value="0.66" id="eta">
+                </div>
               </div>
-
             </div>
           </div>
           <div class="card">
