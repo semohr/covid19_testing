@@ -2,7 +2,7 @@
 * @Author: Sebastian B. Mohr
 * @Date:   2020-08-21 14:26:50
 * @Last Modified by:   Sebastian
-* @Last Modified time: 2020-08-28 10:58:54
+* @Last Modified time: 2020-09-15 16:09:36
 */
 
 
@@ -107,7 +107,8 @@ input[type="range"]::-webkit-slider-thumb{
 --------------------------------------------------------------*/
 
 .card-header{
-	justify-content: space-between
+	justify-content: space-between;
+  font-weight: 600;
 }
 
 #advanced-checkbox{
@@ -213,4 +214,34 @@ input[type="file"] {
 
 .btn-primary{
 	background: #006fb9;
+}
+
+/*--------------------------------------------------------------
+# Tooltips descriptions
+--------------------------------------------------------------*/
+.tooltip {
+  font-family: "Source Serif Pro", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  white-space: normal;
+  /* ... */
+}
+.tooltip-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 4px;
 }

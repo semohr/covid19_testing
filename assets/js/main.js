@@ -414,7 +414,7 @@ function add_model_params_update_event(){
   }
 } 
 
-window.addEventListener("load", add_advanced_mode_event);
+//window.addEventListener("load", add_advanced_mode_event);
 //Advanced mode toggle advanced mode classes
 function add_advanced_mode_event(){
   var checkbox = document.getElementById("advanced_mode")
@@ -624,3 +624,18 @@ function modelData_to_csv(){
   console.log(data)
   exportToCsv("data.csv", data)
 }
+
+/*Add to download button*/
+window.addEventListener("load", download_button);
+function download_button(){
+  var btn = document.getElementById("download");
+  btn.addEventListener("click", modelData_to_csv);
+}
+
+/*Enable tooltips*/
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+
