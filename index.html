@@ -38,8 +38,6 @@
       <ul class="navbar-nav">
         <li class="nav-item active"><a class="nav-link" href="/">COVID-19 Tracing &amp; Testing</a></li>
         <li class="nav-item disabled"><a class="nav-link" href="/about.html">About</a></li>
-        <li class="nav-item disabled"><a class="nav-link" href="/about.html">FAQ</a></li>
-        <li class="nav-item disabled"><a class="nav-link" href="/about.html">More</a></li>
       </ul>
      </nav>
     </div>
@@ -53,7 +51,7 @@
             <div class="card-header">
               DISCLAIMER:
             </div>
-             <div class="card-body">
+            <div class="card-body">
               <p>The interactive plotting utilities seen here are in a beta state and will be expanded/polished in the near future!
               </p>
 
@@ -150,8 +148,8 @@
                 <label class="form-label col"><math> n<sub>max</sub></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
-                <input type="range" class="form-range" min="100" max="3000" step="1" value="300" id="n_max">
-                <input type="number" class="form-number" min="100" max="3000" step="1" value="300" id="n_max">
+                <input type="range" class="form-range" min="100" max="100000" step="1" value="300" id="n_max">
+                <input type="number" class="form-number" min="100" max="100000" step="1" value="300" id="n_max">
               </div>
               <hr>
               <div class="row form-header">
@@ -245,9 +243,17 @@
 
   </main>
 
-  <footer>
-    
-
+  <footer id="footer">
+    <div class="navbar navbar-expand navbar-light row no-gutters bg-light">
+      <div class="col">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/impressum.html">Impressum</a></li>
+          <li class="nav-item"><a class="nav-link" href="/impressum.html#Datenschutzhinweis">Datenschutzhinweis</a></li>
+        </ul>
+      </div>
+      <div class="col">
+      </div>
+    </div>
   </footer>
 
 
@@ -256,8 +262,8 @@
   <script src="assets/js/bootstrap/bootstrap.bundle.min.js"></script>
 
   <!-- Highcharts -->
-  <script src="https://code.highcharts.com/highcharts.js"></script>
-  <script src="http://code.highcharts.com/modules/exporting.js"></script>
+  <script src="assets/js/highcharts/highcharts.js"></script>
+  <script src="assets/js/highcharts/exporting.js"></script>
 
   <!-- Own JS -->
   <script type="text/javascript" src="assets/js/model.js"></script>

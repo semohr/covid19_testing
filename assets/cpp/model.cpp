@@ -51,7 +51,7 @@ void Model::calc_new_cases(){
 }
 
 
-double gamma_pdf(double x,double a,double b){
+double gamma_pdf(double x,double a, double b){
 	return pow(x,a-1.0)*exp(-x)/tgamma(a);
 }
 
@@ -88,9 +88,10 @@ void Model::calc_new_cases_obs(){
 
 	// For gamma kernel we need approx 11days
 	double dt_in_days = 12/_dt;
+	second_part.push_back(0.0);
 	for (int i = 0; i < dt_in_days; i++){
 		cout << data.time[i] << endl;
-		gamm_pdf = gamma_pdf(data.time[i],4.0,1.0);
+		gamm_pdf = gamma_pdf(data.time[i]+0.5,4.0,1.0); // +0.5 here because of other convolution used by seba see github
 		second_part.push_back(gamm_pdf);
 	}
 	//Normalize pdf

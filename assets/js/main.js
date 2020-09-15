@@ -41,7 +41,7 @@ function complete_model_run(){
   update_model_params();
 
   //Run model
-  throttle(model.run(1.0,params["t_max"],params["T_0"],params["H_0"]),  150);
+  throttle(model.run(params["dt"],params["t_max"],params["T_0"],params["H_0"]),  150);
   //Get new data
   get_model_data();
 
@@ -61,7 +61,7 @@ function update_model_params(){
   range["lambda_r"]=[0,0.02];
   range["lambda_s"]=[0,1];
   range["eta"] = [0,1];
-  range["n_max"] = [100,3000];
+  range["n_max"] = [100,10000000];
   range["epsilon"] = [0,1];
   range["Phi"] = [0,1000];
 
@@ -606,7 +606,7 @@ function modelData_to_csv(){
     "R_t_eff",
     "R_t_obs"]];
 
-  for(var i=1; i<100; ++i){ 
+  for(var i=1; i<modelData["time"].length; ++i){ 
     data.push([
       modelData["time"][i],
       modelData["T"][i],
