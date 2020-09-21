@@ -50,6 +50,21 @@ function complete_model_run(){
   update_chart();
 }
 
+math = {};
+math["R_t_H"] = '<math>R<sup>H</sup></math>';
+math["gamma"] = '<math>&Gamma;</math>';
+math["xi"] = '<math>&xi;</math>';
+math["phi"] = '<math>φ</math>';
+math["nu"] = '<math>&nu;</math>';
+math["lambda_r"] = '<math>&lambda;<sub>r</sub></math>';
+math["lambda_s"] = '<math>&lambda;<sub>s</sub></math>';
+math["eta"] = '<math>&eta;</math>';
+math["n_max"] = '<math>n<sub>max</sub></math>';
+math["epsilon"] = '<math>&epsilon;</math>';
+math["Phi"] = '<math>&Phi;</math>';
+
+modal_shown = false;
+modal_do_not_show = false;
 function update_model_params(){
   //Check if the params are valid!
   var range = {};
@@ -65,12 +80,6 @@ function update_model_params(){
   range["epsilon"] = [0,1];
   range["Phi"] = [0,1000];
 
-  for (var key in range){
-    if ((params[key] > range[key][1]) || (params[key] < range[key][0])){
-      alert("Parameter "+key+ " is in an unexpected range!\nUndefined behaviour possible!")
-    }
-  }
-
   //Syncs the javascript params to the wasm model params
   model.R_t_H       = params["R_t_H"];
   model.gamma       = params["gamma"];
@@ -83,6 +92,24 @@ function update_model_params(){
   model.n_max       = params["n_max"];
   model.epsilon     = params["epsilon"];
   model.Phi         = params["Phi"];
+
+
+  for (var key in range){
+    if (modal_do_not_show){
+      break;
+    }
+    if ((params[key] > range[key][1]) || (params[key] < range[key][0])){
+      if (!modal_shown){
+        document.getElementById("modal_parameter").innerHTML = math[key];
+        var myModal = new bootstrap.Modal(document.getElementById('popup'), {
+          keyboard: false
+        })
+        myModal.show();
+        modal_shown = true;
+      }
+    }
+  }
+
   return;
 }
 
@@ -103,8 +130,30 @@ function get_model_data(){
   modelData["T_A"] = data.T_A();
   modelData["N"] = data.N();
   modelData["N_obs"] = data.N_obs();
+  modelData["total_cases"] = data.total_cases();
+  modelData["total_cases_obs"] = data.total_cases_obs();
   modelData["R_t_obs"] = data.R_t_obs();
   modelData["R_t_eff"] = data.R_t_eff();
+}
+// ---------------------------------------------------------------------------- //
+// Popup close
+// ---------------------------------------------------------------------------- //
+window.addEventListener("load", modal_close);
+function modal_close(){
+  var myModal = document.getElementById('popup');
+  myModal.addEventListener('hidden.bs.modal', function (e) {
+    modal_shown = false;
+  })
+}
+
+window.addEventListener("load", modal_shownot);
+function modal_shownot(){
+  var btn = document.getElementById('modal-not-show');
+  btn.addEventListener('click', function (e) {
+    modal_do_not_show = true;
+    modal_shown = false;
+  })
+
 }
 
 
@@ -181,10 +230,23 @@ function create_initial_chart(){
       visible: true,
     },
     {
-      name: "Total new cases",
+      name: "New cases",
       data: [modelData["N"],modelData["time"]],
       dashStyle: 'DashDot',
       color: '#8200b9',
+      visible: false,
+    },
+    {
+      name: "Total cases observed",
+      data: [modelData["total_cases_obs"],modelData["time"]],
+      color: '#BE90D4',
+      visible: false,
+    },
+    {
+      name: "Total cases",
+      data: [modelData["total_cases"],modelData["time"]],
+      dashStyle: 'DashDot',
+      color: '#BE90D4',
       visible: false,
     },
     ],
@@ -307,6 +369,7 @@ function update_chart(){
     create_initial_chart();
     return;
   }
+  //First chart i.e. Pools
   var chart = window.charts[0];
   chart.series[0].setData(modelData["T"],false);
   chart.series[1].setData(modelData["T_S"],false);
@@ -315,15 +378,16 @@ function update_chart(){
   chart.series[4].setData(modelData["H_S"],false);
   chart.series[5].setData(modelData["H_A"],false);
   chart.redraw();
-
   //Second chart
   if (typeof window.charts[1] == 'undefined') {
     create_initial_chart();
     return;
   }
   var chart = window.charts[1];
-  chart.series[1].setData(modelData["N"],false);
   chart.series[0].setData(modelData["N_obs"],false);
+  chart.series[1].setData(modelData["N"],false);
+  chart.series[2].setData(modelData["total_cases_obs"],false);
+  chart.series[3].setData(modelData["total_cases"],false);
   chart.redraw(); 
 
   //Third chart

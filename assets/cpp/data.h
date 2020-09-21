@@ -24,6 +24,10 @@ struct data_struct{
 	vector<double> N;
 	vector<double> N_obs;
 
+	//Total cases
+	vector<double> total_cases;
+	vector<double> total_cases_obs;
+
 	//Reproduction number
 	vector<double> R_t_obs;
 	vector<double> R_t_eff;
@@ -38,6 +42,8 @@ struct data_struct{
 		T_A.clear();
 		N.clear();
 		N_obs.clear();
+		total_cases.clear();
+		total_cases_obs.clear();
 		R_t_obs.clear();
 		R_t_eff.clear();
 	};
@@ -61,7 +67,11 @@ struct data_struct{
 	val getN();
 	val getN_obs();
 
-	//New cases
+	//Total cases
+	val gettotal_cases();
+	val gettotal_cases_obs();
+
+	//Reproduction number
 	val getR_t_obs();
 	val getR_t_eff();
 };

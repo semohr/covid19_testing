@@ -133,7 +133,7 @@
                 <label class="form-label col">Random testing rate
                   <i class="far fa-question-circle" data-toggle="tooltip" tabindex="0" data-html="true" title='Rate at which infected individuals from the hidden are tested and moved to the traced pool, irrespective of them showing symptoms.'></i>
                 </label>
-                <label class="form-label col"><math> &lambda;<sub>r</sub></label>
+                <label class="form-label col"><math> &lambda;<sub>r</sub></math></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0.0" max="0.02" step="0.0001" value="0.0" id="lambda_r">
@@ -155,7 +155,7 @@
                 <label class="form-label col">Tracing efficiency
                   <i class="far fa-question-circle" data-toggle="tooltip" tabindex="0" data-html="true" title='Fraction of contacts that could be traced by the health authorities.'></i>
                 </label>
-                <label class="form-label col"><math> &eta;</label>
+                <label class="form-label col"><math> &eta;</math></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0.0" max="1.0" step="0.01" value="0.66" id="eta">
@@ -166,7 +166,7 @@
                 <label class="form-label col">Tracing capacity
                   <i class="far fa-question-circle" data-toggle="tooltip" tabindex="0" data-html="true" title='Number of positive contacts that can maximally be detected and handled on average by the health authorities.'></i>
                 </label>
-                <label class="form-label col"><math> n<sub>max</sub></label>
+                <label class="form-label col"><math> n<sub>max</sub></math></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="100" max="100000" step="1" value="300" id="n_max">
@@ -184,7 +184,7 @@
                 <label class="form-label col">Case discharge rate
                   <i class="far fa-question-circle" data-toggle="tooltip" tabindex="0" data-html="true" title='Rate at which individuals leave the infectious stage, namely the traced and hidden pools, through recovery or death.'></i>
                 </label>
-                <label class="form-label col"><math> &Gamma;</label>
+                <label class="form-label col"><math> &Gamma;</math></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0.08" max="0.12" step="0.001" value="0.1" id="gamma">
@@ -195,7 +195,7 @@
                 <label class="form-label col">Asymptomatic ratio
                   <i class="far fa-question-circle" data-toggle="tooltip" tabindex="0" data-html="true" title='Fraction of the population that will not develop any symptoms throughout the infection timeline.'></i>
                 </label>
-                <label class="form-label col"><math> &xi;</label>
+                <label class="form-label col"><math> &xi;</math></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0.12" max="0.33" step="0.001" value="0.15" id="xi">
@@ -206,7 +206,7 @@
                 <label class="form-label col">Influx rate of infections
                   <i class="far fa-question-circle" data-toggle="tooltip" tabindex="0" data-html="true" title='Number of foreign infected individuals entering the system per day.'></i>
                 </label>
-                <label class="form-label col"><math> &Phi;</label>
+                <label class="form-label col"><math> &Phi;</math></label>
               </div>
               <div class="form-linked-inputs d-flex align-items-center">
                 <input type="range" class="form-range" min="0" max="1000" step="1" value="15" id="Phi">
@@ -286,7 +286,6 @@
     <!-- Loading screen -->
     <div id="loading"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div></div>
 
-
   </main>
 
   <footer id="footer">
@@ -316,4 +315,27 @@
   <script type="text/javascript" src="assets/js/model.js"></script>
   <script type="text/javascript" src="assets/js/main.js"></script>
 </body>
+
+<!-- Modal: Popup for strange range -->
+<div id="popup" class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Warning: Parameters values in unsupported range!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The parameter values for <span id="modal_parameter"></span> are in an unsupported range! The differential equation could be in the unstable regime!</p>
+        <p>Very small or big values are going break the simulation!</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-not-show" type="button" class="btn btn-secondary" data-dismiss="modal">Do not show warning again!</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </html>

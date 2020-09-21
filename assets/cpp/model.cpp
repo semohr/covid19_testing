@@ -111,7 +111,22 @@ void Model::calc_new_cases_obs(){
 	data.N_obs.erase(data.N_obs.end()-int(dt_in_days),data.N_obs.end());
 }
 
-
+void Model::calc_total_cases(){
+	// Calculates observed and normal total cases
+	double total = 0.0;
+	for (int i = 0; i < data.N.size(); ++i)
+	{
+		cout << total << endl;
+		total += data.N[i];
+		data.total_cases.push_back(total);
+	}
+	double total_obs = 0.0;
+	for (int i = 0; i < data.N_obs.size(); ++i)
+	{
+		total_obs += data.N_obs[i];
+		data.total_cases_obs.push_back(total_obs);
+	}
+}
 
 void Model::calc_R_t_obs(){
 	double t;
@@ -299,6 +314,7 @@ void Model::run(double dt, double t_max, double T_S, double T_A, double H_S, dou
 	// Calc addittional stuff
 	calc_new_cases();
 	calc_new_cases_obs();
+	calc_total_cases();
 
 	calc_R_t_obs();
 	calc_R_t_eff();

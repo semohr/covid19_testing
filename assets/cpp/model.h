@@ -85,7 +85,8 @@ class Model{
 
 		void calc_new_cases();
 		void calc_new_cases_obs();
-
+		void calc_total_cases();
+		
 		void calc_R_t_obs();
 		void calc_R_t_eff();
 		// ---------------------------------------------------------------------------- //

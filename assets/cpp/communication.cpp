@@ -50,6 +50,15 @@ val data_struct::getN_obs(){
 	return val(typed_memory_view(N_obs.size(),a));	
 }
 
+//Total cases
+val data_struct::gettotal_cases(){
+	double* a = &total_cases[0];
+	return val(typed_memory_view(total_cases.size(),a));	
+}
+val data_struct::gettotal_cases_obs(){
+	double* a = &total_cases_obs[0];
+	return val(typed_memory_view(total_cases_obs.size(),a));		
+}
 
 //Reproduction number
 val data_struct::getR_t_obs(){
