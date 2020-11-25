@@ -2,7 +2,7 @@
 * @Author: Sebastian B. Mohr
 * @Date:   2020-08-21 14:26:50
 * @Last Modified by:   Sebastian
-* @Last Modified time: 2020-09-21 10:37:54
+* @Last Modified time: 2020-11-10 13:11:50
 */
 
 
@@ -251,4 +251,13 @@ input[type="file"] {
 
 .modal-backdrop+.modal-backdrop {
   opacity : 0;
+}
+
+
+/*--------------------------------------------------------------
+# Fixing data collapse
+--------------------------------------------------------------*/
+.collapsing{
+  height: 0 !important;
+  opacity: 0;
 }

@@ -178,10 +178,11 @@ function create_initial_chart(){
       'Daily new infections observed and true numbers.',
       'Effective and observed reproduction numbers over time.'];
   var chartyaxistitle = [
-      "Cases (total)",
-      "Cases (per day)",
+      "Cases",
+      "Cases",
       "Reproduction number"];
   var yAxis_max = [null,null,2.0];
+  var yAxis_ceiling = [6500,5900,undefined];
   var chartdata = [
     //First
     [{
@@ -237,13 +238,13 @@ function create_initial_chart(){
       visible: false,
     },
     {
-      name: "Total cases observed",
+      name: "Cumulative cases observed",
       data: [modelData["total_cases_obs"],modelData["time"]],
       color: '#BE90D4',
       visible: false,
     },
     {
-      name: "Total cases",
+      name: "Cumulative cases",
       data: [modelData["total_cases"],modelData["time"]],
       dashStyle: 'DashDot',
       color: '#BE90D4',
@@ -276,8 +277,8 @@ function create_initial_chart(){
         spacingTop: 20,
         spacingBottom: 20,
         style: {
-          fontFamily: "Source Serif Pro"
-        }
+          fontFamily: "Source Serif Pro",
+        },
       },
       title: {
         text: charttitle[i],
@@ -310,6 +311,7 @@ function create_initial_chart(){
           useHTML: true,
         },
         max: yAxis_max[i],
+        ceiling: yAxis_ceiling[i],
       },
       series: chartdata[i],
 
@@ -320,7 +322,7 @@ function create_initial_chart(){
                 symbol: "circle",
                 enabled: false //Disable markers
             },
-            lineWidth: 4
+            lineWidth: 4,
           }
       },
       //Export button for png svg and other
